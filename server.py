@@ -4,6 +4,7 @@
 Clase (y programa principal) para un servidor de eco en UDP simple
 """
 
+import os
 import socketserver
 import sys
 
@@ -24,7 +25,7 @@ class EchoHandler(socketserver.DatagramRequestHandler):
                                      bytes("SIP/2.0 200 OK\r\n\r\n", 'utf-8'))
                     
                 elif dcline.split()[0] == 'ACK':
-                        print("hola")
+                    os.system('./mp32rtp -i 127.0.0.1 -p 23032 < ' + sys.argv[3])
                         
                 elif dcline.split()[0] == 'BYE':
                     self.wfile.write(b"SIP/2.0 200 OK\r\n")
@@ -51,8 +52,8 @@ class EchoHandler(socketserver.DatagramRequestHandler):
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        sys.exit("Usage: python3 client.py method receiver@IP:SIPport")
+        sys.exit("Usage: Usage: python3 server.py IP port audio_file")
     # Creamos servidor de eco y escuchamos
     serv = socketserver.UDPServer(('', int(sys.argv[2])), EchoHandler)
-    print("Lanzando servidor UDP de eco...")
+    print("Listening...")
     serv.serve_forever()
