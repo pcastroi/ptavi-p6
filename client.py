@@ -27,14 +27,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
     my_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     my_socket.connect((SERVER, int(MPORT)))
     
-    Msend = MLOGIN + '@' + MIP + ':' + MPORT
+    Msend = 'sip:' + MLOGIN + '@' + MIP + ' SIP/2.0\r\n'
     print("Enviando: " + METHOD + ' ' + Msend)
     my_socket.send(bytes(METHOD + ' ' + Msend, 'utf-8') + b'\r\n')
     data = my_socket.recv(1024)
 
-    print('Recibido -- ', data.decode('utf-8'))
+    print(data.decode('utf-8'))
     if data.decode('utf-8').split()[1] == "100":
-        print("Entro al if")
         my_socket.send(bytes("ACK" + ' ' + Msend, 'utf-8') + b'\r\n')
     print("Terminando socket...")
 
